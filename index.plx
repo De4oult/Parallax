@@ -1,2 +1,2 @@
 int 17 -> age;
-string "John" -> name;
+string "John str test" -> name;

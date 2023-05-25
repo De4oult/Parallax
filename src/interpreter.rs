@@ -8,10 +8,23 @@ fn lexer(content: String) {
         let chars = line.chars();
 
         let mut tokens: Vec<String> = Vec::new();
-        let mut temp_s: String = String::new();
+        let mut temp_s: String      = String::new();
+        let mut quotes: i8          = 0;
+        let mut is_str: bool        = false;
 
         for character in chars {
-            if character == ' ' {
+            if character == '"' {
+                quotes += 1;
+            }
+
+            if quotes % 2 == 0 {
+                is_str = false;
+            }
+            else {
+                is_str = true;
+            }
+
+            if character == ' ' && is_str == false {
                 tokens.push(temp_s);
                 temp_s = String::new();
             }
