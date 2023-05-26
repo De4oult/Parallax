@@ -1,2 +1,2 @@
-int 17 -> age;
-string "John str test" -> name;
+string "John str test" -> name
+int 10 + 7 -> age

@@ -1,5 +1,6 @@
 use std::fs::File;
 use std::io::Read;
+use regex::Regex;
 
 fn lexer(content: String) {
     let lines = content.split('\n');
@@ -31,7 +32,35 @@ fn lexer(content: String) {
             }
         }
         tokens.push(temp_s);
-        println!("{:?}", tokens);
+
+        let mut items = Vec::new();
+
+        for token in &tokens {
+            if &token[0..1] == "\"" {
+                match &token[token.len() - 1..] {
+                    "\"" => items.push(("string", token)),
+                    _    => {
+                        println!("An error occured: no end of string"); 
+                        break;
+                    }
+                }
+            }
+            else if Regex::new(r"[.a-zA-Z]+").unwrap().is_match(&token) {
+                items.push(("symbol", token));
+            }
+            else if String::from("+-*/").contains(&*token) {
+                items.push(("expression", token));
+            }
+            else if Regex::new(r"[.0-9]+").unwrap().is_match(&token) {
+                items.push(("number", token));
+            }
+            else if token == "->" {
+                items.push(("assign", token));
+            }
+        }
+
+        //println!("{:?}", tokens);
+        println!("{:#?}", items);
     }
 }
 
@@ -46,4 +75,13 @@ pub fn parse(path: String) {
     //let tokens = lexer(content);
 
     //println!("{}", tokens);
-} 
+}
+
+/*
+Token Types
+
+string -> "Hello, world"
+symbol -> func, var ...
+expres -> + - * / ** == != > < >= <= -> <- %
+number -> 10, 2.5, 0x00, 010101
+*/
