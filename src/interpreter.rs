@@ -10,18 +10,16 @@ fn lexer(content: String) {
         let mut tokens: Vec<String> = Vec::new();
         let mut temp_s: String      = String::new();
         let mut quotes: i8          = 0;
-        let mut is_str: bool        = false;
+        let mut is_str: bool;
 
         for character in chars {
             if character == '"' {
                 quotes += 1;
             }
 
-            if quotes % 2 == 0 {
-                is_str = false;
-            }
-            else {
-                is_str = true;
+            match quotes % 2 {
+                0 => is_str = false,
+                _ => is_str = true
             }
 
             if character == ' ' && is_str == false {
@@ -43,7 +41,9 @@ pub fn parse(path: String) {
     
     file.read_to_string(&mut content).expect("An error occured while reading file");
 
-    let tokens = lexer(content);
+    lexer(content);
+
+    //let tokens = lexer(content);
 
     //println!("{}", tokens);
 } 
